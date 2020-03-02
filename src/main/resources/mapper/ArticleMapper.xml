@@ -2,39 +2,24 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.dao.DicDataDao">
-    <resultMap type="DicData" id="userResultMap">
+<mapper namespace="com.dao.ArticleDao">
+    <resultMap type="Article" id="articleResultMap">
         <id property="id" column="id" jdbcType="INTEGER"/>
-        <result property="code" column="code" jdbcType="VARCHAR"/>
-        <result property="value" column="value" jdbcType="VARCHAR"/>
-        <result property="type" column="type" jdbcType="VARCHAR"/>
-        <result property="desc" column="desc" jdbcType="VARCHAR"/>
-
-<!--        <association property="classNum" javaType="User">-->
-<!--            <id property="id" column="id" jdbcType="INTEGER"/>-->
-<!--            <result property="loginName" column="login_name" jdbcType="VARCHAR"/>-->
-<!--            <result property="classNum" column="class_num" jdbcType="INTEGER"/>-->
-<!--            <result property="realName" column="real_name" jdbcType="VARCHAR"/>-->
-<!--            <result property="age" column="age" jdbcType="INTEGER"/>-->
-<!--            <result property="sex" column="sex" jdbcType="VARCHAR"/>-->
-<!--        </association>-->
-
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="parentId" column="parent_id" jdbcType="INTEGER"/>
+        <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
     </resultMap>
+<!--    <sql id="select">-->
+<!--      SELECT * FROM t_article-->
+<!--    </sql>-->
 
-    <select id="getClassList" resultMap="userResultMap">
-        select d.value,d.code from  t_dic_data d
-        left join t_sys_user u
-        on u.class_num = d.code
-        where d.type = 'class_num'
-        GROUP BY class_num
-    </select>
-
-<!--    <select id="selectById" resultMap="userResultMap">-->
+<!--    <select id="selectById" resultMap="articleResultMap">-->
 <!--        <include refid="select"/>-->
 <!--        where id=#{id}-->
 <!--    </select>-->
 
-<!--    <select id="pageList" resultMap="userResultMap">-->
+<!--    <select id="pageList" resultMap="articleResultMap">-->
 <!--        <include refid="select"/>-->
 <!--        where isDel = 0-->
 <!--        limit #{offset},#{size}-->
@@ -44,23 +29,31 @@
 <!--        select count(*) from t_sys_user-->
 <!--    </select>-->
 
-<!--    <select id="getById" resultMap="userResultMap">-->
+<!--    <select id="getById" resultMap="articleResultMap">-->
 <!--      select * form t_sys_user WHERE id = #{id}-->
 <!--    </select>-->
 
-<!--    <select id="searchUser" resultMap="userResultMap">-->
-<!--        select * from t_sys_user-->
-<!--        <if test="keyword!=null and keyword != ''">-->
-<!--            where concat(login_name,real_name,age,sex,class_num) like CONCAT('%',#{keyword},'%')-->
-<!--            and isDel = 0-->
-<!--        </if>-->
-<!--        <if test="keyword == null or keyword == ''">-->
-<!--            where isDel = 0-->
-<!--        </if>-->
-<!--        order by class_num-->
+    <select id="searchArticle" resultMap="articleResultMap">
+        select * from t_article
+            <if test="keyword!=null and keyword != ''">
+                where concat(title,content) like CONCAT('%',#{keyword},'%')
+                and is_delete = 0
+            </if>
+            <if test="keyword == null or keyword == ''">
+                where is_delete = 0
+            </if>
+            order by is_delete
+    </select>
+
+    <select id="selectByParentId" resultMap="articleResultMap">
+        select * from t_article
+        where id = #{id}
+        and is_delete = 0
+    </select>
+
+<!--    <select id="findByLoginNameAndPassword" resultType="com.pojo.User">-->
+<!--      select * from t_sys_user WHERE login_name = #{loginName} and password = #{password}-->
 <!--    </select>-->
-
-
 
 <!--    <insert id="insertSelective" parameterType="User" useGeneratedKeys="true" keyProperty="id">-->
 <!--        INSERT into t_sys_user-->
